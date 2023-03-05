@@ -1,16 +1,20 @@
-import { Email } from "@/core/types/scalar/email";
 import * as t from "io-ts";
+import { emailCodec } from "@/core/types/scalar/email";
 
-export type User = {
-  email: t.TypeOf<typeof Email>;
-  token: string;
-  username: string;
-  bio: string;
-  image: string;
-};
+export const userCodec = t.type({
+  email: emailCodec,
+  token: t.string,
+  username: t.string,
+  bio: t.string,
+  image: t.string,
+});
 
-export type CreateUser = {
-  email: t.TypeOf<typeof Email>;
-  password: string;
-  username: string;
-};
+export type User = t.TypeOf<typeof userCodec>;
+
+export const createUserCodec = t.type({
+  email: emailCodec,
+  password: t.string,
+  username: t.string,
+});
+
+export type CreateUser = t.TypeOf<typeof createUserCodec>;

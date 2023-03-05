@@ -1,23 +1,20 @@
 import { pipe } from "fp-ts/function";
 import * as E from "fp-ts/Either";
-import { Email, isEmail } from "./email";
-import { Errors } from "io-ts";
-
-const checkValidEmail = (result: string) => (email: string) =>
-  expect(result).toEqual(email);
-
-const checkInvalidEmail = (result: string) => (errors: Errors) =>
-  expect(result).toEqual(errors[0]?.message);
+import { emailCodec, isEmail } from "./email";
 
 it("should validate email correctly", () => {
-  pipe("john@doe.com", Email.decode, E.map(checkValidEmail("john@doe.com")));
+  pipe(
+    "john@doe.com",
+    emailCodec.decode,
+    E.map((result) => expect(result).toEqual("john@doe.com"))
+  );
 });
 
 it("should return error when email is not valid", () => {
   pipe(
     "invalid-email",
-    Email.decode,
-    E.mapLeft(checkInvalidEmail("Invalid email"))
+    emailCodec.decode,
+    E.mapLeft((error) => expect(error[0]?.message).toBe("Invalid email"))
   );
 });
 

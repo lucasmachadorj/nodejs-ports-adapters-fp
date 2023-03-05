@@ -1,10 +1,9 @@
-import * as t from "io-ts";
 import * as TE from "fp-ts/TaskEither";
 import { pipe } from "fp-ts/function";
 import { Email } from "@/core/types/scalar/email";
 
-export function unsafeEmail(email: string): t.TypeOf<typeof Email> {
-  return email as t.TypeOf<typeof Email>;
+export function unsafeEmail(email: string): Email {
+  return email as Email;
 }
 
 type Callback = (a: unknown) => unknown;
