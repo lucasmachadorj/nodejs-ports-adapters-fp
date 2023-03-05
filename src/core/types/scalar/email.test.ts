@@ -17,7 +17,9 @@ it("should return error when email is not valid", async () => {
     "invalid-email",
     emailCodec.decode,
     TE.fromEither,
-    mapAll((error) => expect(getErrorMessage(error)).toBe("Invalid email"))
+    mapAll((error) =>
+      expect(getErrorMessage(error)).toBe("Please, insert a valid email")
+    )
   )();
 });
 
