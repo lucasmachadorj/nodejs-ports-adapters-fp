@@ -1,5 +1,8 @@
+import { Email } from "@/core/types/scalar/email";
+import * as t from "io-ts";
+
 export type User = {
-  email: string;
+  email: t.TypeOf<typeof Email>;
   token: string;
   username: string;
   bio: string;
@@ -7,7 +10,7 @@ export type User = {
 };
 
 export type CreateUser = {
-  email: string;
+  email: t.TypeOf<typeof Email>;
   password: string;
   username: string;
 };
