@@ -16,8 +16,14 @@ app.post("/api/users", (req: Request, res: Response) =>
     req.body.user,
     register(userRegister),
     TE.map((result) => res.json(result)),
-    TE.mapLeft((error) => res.status(400).json({ error: error.message }))
+    TE.mapLeft((error) => res.status(422).json(getErrors(error.message)))
   )()
 );
+
+const getErrors = (errors: string) => ({
+  errors: {
+    body: errors.split(":::"),
+  },
+});
 
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}!`));
