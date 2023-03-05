@@ -1,6 +1,6 @@
 import { pipe } from "fp-ts/function";
 import { CreateUser } from "@/core/types/user";
-import { OutsideRegister, register } from "./register";
+import { OutsideRegister, registerUser } from "./register-user";
 import {
   unsafeEmail,
   mapAll,
@@ -36,7 +36,7 @@ const dataWithWrongEmailAndPassword: CreateUser = {
 it("should register a user successfully", async () =>
   pipe(
     user,
-    register(registerOk),
+    registerUser(registerOk),
     mapAll((result) =>
       expect(result).toBe(`User ${user.username} registered successfully`)
     )
@@ -45,14 +45,14 @@ it("should register a user successfully", async () =>
 it("should fail to register a user", async () =>
   pipe(
     user,
-    register(registerFail),
+    registerUser(registerFail),
     mapAll((result) => expect(result).toBeInstanceOf(Error))
   )());
 
 it("Should not accept register from a user with invalid username", async () =>
   pipe(
     dataWithWrongUsername,
-    register(registerOk),
+    registerUser(registerOk),
     mapAll((error) =>
       expect(error).toEqual(new Error("Please, insert a valid slug"))
     )
@@ -61,7 +61,7 @@ it("Should not accept register from a user with invalid username", async () =>
 it("Should not accept register from a user with invalid email and password", async () =>
   pipe(
     dataWithWrongEmailAndPassword,
-    register(registerOk),
+    registerUser(registerOk),
     mapAll((error) =>
       expect(error).toEqual(
         new Error(
@@ -74,6 +74,6 @@ it("Should not accept register from a user with invalid email and password", asy
 it("should return a left if register function throws an error", async () =>
   pipe(
     user,
-    register(registerFail),
+    registerUser(registerFail),
     mapAll((error) => expect(error).toEqual(new Error("External error")))
   )());
