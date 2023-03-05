@@ -3,22 +3,22 @@ import * as TE from "fp-ts/TaskEither";
 import { urlCodec, isUrl } from "./url";
 import { getErrorMessage, mapAll } from "@/config/tests/fixtures";
 
-it("should validate url correctly", () => {
+it("should validate url correctly", async () => {
   pipe(
     "https://url.com",
     urlCodec.decode,
     TE.fromEither,
     mapAll((result) => expect(result).toEqual("https://url.com"))
-  );
+  )();
 });
 
-it("should return error when url is not valid", () => {
+it("should return error when url is not valid", async () => {
   pipe(
     "invalid-url",
     urlCodec.decode,
     TE.fromEither,
     mapAll((error) => expect(getErrorMessage(error)).toBe("Invalid URL"))
-  );
+  )();
 });
 
 it("should check if url format is valid", () => {

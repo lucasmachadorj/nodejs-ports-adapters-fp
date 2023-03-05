@@ -3,16 +3,16 @@ import * as TE from "fp-ts/TaskEither";
 import { slugCodec } from "./slug";
 import { getErrorMessage, mapAll } from "@/config/tests/fixtures";
 
-it("should validate slug properly", () => {
+it("should validate slug properly", async () => {
   pipe(
     "valid-slug",
     slugCodec.decode,
     TE.fromEither,
     mapAll((result) => expect(result).toEqual("valid-slug"))
-  );
+  )();
 });
 
-it("should not accept number at the beginning of the slug", () => {
+it("should not accept number at the beginning of the slug", async () => {
   pipe(
     "1invalid-slug",
     slugCodec.decode,
@@ -20,10 +20,10 @@ it("should not accept number at the beginning of the slug", () => {
     mapAll((error) =>
       expect(getErrorMessage(error)).toBe("Please, insert a valid slug")
     )
-  );
+  )();
 });
 
-it("should not accept dashes at the end of the slug", () => {
+it("should not accept dashes at the end of the slug", async () => {
   pipe(
     "invalid-slug-",
     slugCodec.decode,
@@ -34,10 +34,10 @@ it("should not accept dashes at the end of the slug", () => {
         : "";
       expect(errorMessage).toBe("Please, insert a valid slug");
     })
-  );
+  )();
 });
 
-it("should not accept less than 3 characters", () => {
+it("should not accept less than 3 characters", async () => {
   pipe(
     "in",
     slugCodec.decode,
@@ -48,14 +48,14 @@ it("should not accept less than 3 characters", () => {
         : "";
       expect(errorMessage).toBe("Please, insert a valid slug");
     })
-  );
+  )();
 });
 
-it("should accept three or more characters", () => {
+it("should accept three or more characters", async () => {
   pipe(
     "abc",
     slugCodec.decode,
     TE.fromEither,
     mapAll((result) => expect(result).toEqual("abc"))
-  );
+  )();
 });
