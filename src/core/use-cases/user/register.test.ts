@@ -1,13 +1,17 @@
-import * as TE from "fp-ts/TaskEither";
 import { pipe } from "fp-ts/function";
 import { CreateUser } from "@/core/types/user";
 import { OutsideRegister, register } from "./register";
+import { unsafeEmail, mapAll } from "@/config/tests/fixtures";
 
-const mockOutsideRegister: OutsideRegister<string> = async (data) =>
+const registerOk: OutsideRegister<string> = async (data) =>
   `User ${data.username} registered successfully`;
 
+const registerFail: OutsideRegister<never> = async (data) => {
+  throw new Error(`User ${data.username} already exists`);
+};
+
 const user: CreateUser = {
-  email: "johndoe@example.com",
+  email: unsafeEmail("johndoe@example.com"),
   password: "mysecretpassword",
   username: "johndoe91",
 };
@@ -15,8 +19,15 @@ const user: CreateUser = {
 it("should register a user successfully", async () =>
   pipe(
     user,
-    register(mockOutsideRegister),
-    TE.map((result) =>
+    register(registerOk),
+    mapAll((result) =>
       expect(result).toBe(`User ${user.username} registered successfully`)
     )
+  )());
+
+it("should fail to register a user", async () =>
+  pipe(
+    user,
+    register(registerFail),
+    mapAll((result) => expect(result).toBeInstanceOf(Error))
   )());
