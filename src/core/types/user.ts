@@ -1,12 +1,12 @@
 import * as t from "io-ts";
-import { emailCodec } from "@/core/types/scalar/email";
+import { emailCodec, urlCodec } from "@/core/types/scalar";
 
 export const userCodec = t.type({
   email: emailCodec,
   token: t.string,
   username: t.string,
   bio: t.string,
-  image: t.string,
+  image: urlCodec,
 });
 
 export type User = t.TypeOf<typeof userCodec>;

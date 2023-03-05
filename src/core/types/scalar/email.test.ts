@@ -1,12 +1,12 @@
 import { pipe } from "fp-ts/function";
-import * as E from "fp-ts/Either";
 import { emailCodec, isEmail } from "./email";
+import { mapAllE } from "@/config/tests/fixtures";
 
 it("should validate email correctly", () => {
   pipe(
     "john@doe.com",
     emailCodec.decode,
-    E.map((result) => expect(result).toEqual("john@doe.com"))
+    mapAllE((result) => expect(result).toEqual("john@doe.com"))
   );
 });
 
@@ -14,7 +14,11 @@ it("should return error when email is not valid", () => {
   pipe(
     "invalid-email",
     emailCodec.decode,
-    E.mapLeft((error) => expect(error[0]?.message).toBe("Invalid email"))
+    mapAllE((error) =>
+      Array.isArray(error)
+        ? expect(error[0]?.message).toBe("Invalid email")
+        : expect(error).toBeInstanceOf(Error)
+    )
   );
 });
 
