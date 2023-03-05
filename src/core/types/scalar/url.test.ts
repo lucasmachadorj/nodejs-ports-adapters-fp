@@ -1,12 +1,14 @@
 import { pipe } from "fp-ts/function";
+import * as TE from "fp-ts/TaskEither";
 import { urlCodec, isUrl } from "./url";
-import { mapAllE } from "@/config/tests/fixtures";
+import { mapAll } from "@/config/tests/fixtures";
 
 it("should validate url correctly", () => {
   pipe(
     "https://url.com",
     urlCodec.decode,
-    mapAllE((result) => expect(result).toEqual("https://url.com"))
+    TE.fromEither,
+    mapAll((result) => expect(result).toEqual("https://url.com"))
   );
 });
 
@@ -14,7 +16,8 @@ it("should return error when url is not valid", () => {
   pipe(
     "invalid-url",
     urlCodec.decode,
-    mapAllE((error) => {
+    TE.fromEither,
+    mapAll((error) => {
       const errorMessage: string = Array.isArray(error)
         ? error[0]?.message
         : "";
