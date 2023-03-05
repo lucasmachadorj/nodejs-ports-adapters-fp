@@ -14,11 +14,12 @@ it("should return error when url is not valid", () => {
   pipe(
     "invalid-url",
     urlCodec.decode,
-    mapAllE((error) =>
-      Array.isArray(error)
-        ? expect(error[0]?.message).toBe("Invalid URL")
-        : expect(error).toBeInstanceOf(Error)
-    )
+    mapAllE((error) => {
+      const errorMessage: string = Array.isArray(error)
+        ? error[0]?.message
+        : "";
+      expect(errorMessage).toBe("Invalid URL");
+    })
   );
 });
 

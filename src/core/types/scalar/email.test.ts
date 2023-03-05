@@ -14,11 +14,12 @@ it("should return error when email is not valid", () => {
   pipe(
     "invalid-email",
     emailCodec.decode,
-    mapAllE((error) =>
-      Array.isArray(error)
-        ? expect(error[0]?.message).toBe("Invalid email")
-        : expect(error).toBeInstanceOf(Error)
-    )
+    mapAllE((error) => {
+      const errorMessage: string = Array.isArray(error)
+        ? error[0]?.message
+        : "";
+      expect(errorMessage).toBe("Invalid email");
+    })
   );
 });
 
