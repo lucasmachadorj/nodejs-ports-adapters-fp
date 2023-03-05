@@ -1,7 +1,7 @@
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/TaskEither";
 import { slugCodec } from "./slug";
-import { mapAll } from "@/config/tests/fixtures";
+import { getErrorMessage, mapAll } from "@/config/tests/fixtures";
 
 it("should validate slug properly", () => {
   pipe(
@@ -17,12 +17,9 @@ it("should not accept number at the beginning of the slug", () => {
     "1invalid-slug",
     slugCodec.decode,
     TE.fromEither,
-    mapAll((error) => {
-      const errorMessage: string = Array.isArray(error)
-        ? error[0]?.message
-        : "";
-      expect(errorMessage).toBe("Please, insert a valid slug");
-    })
+    mapAll((error) =>
+      expect(getErrorMessage(error)).toBe("Please, insert a valid slug")
+    )
   );
 });
 

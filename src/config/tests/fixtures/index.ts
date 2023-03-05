@@ -13,3 +13,6 @@ type MapAll = (
 
 export const mapAll: MapAll = (fn) => (data) =>
   pipe(data, TE.map(fn), TE.mapLeft(fn));
+
+export const getErrorMessage = (errors: unknown): string =>
+  Array.isArray(errors) ? errors[0].message : "";

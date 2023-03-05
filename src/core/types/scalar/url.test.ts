@@ -1,7 +1,7 @@
 import { pipe } from "fp-ts/function";
 import * as TE from "fp-ts/TaskEither";
 import { urlCodec, isUrl } from "./url";
-import { mapAll } from "@/config/tests/fixtures";
+import { getErrorMessage, mapAll } from "@/config/tests/fixtures";
 
 it("should validate url correctly", () => {
   pipe(
@@ -17,12 +17,7 @@ it("should return error when url is not valid", () => {
     "invalid-url",
     urlCodec.decode,
     TE.fromEither,
-    mapAll((error) => {
-      const errorMessage: string = Array.isArray(error)
-        ? error[0]?.message
-        : "";
-      expect(errorMessage).toBe("Invalid URL");
-    })
+    mapAll((error) => expect(getErrorMessage(error)).toBe("Invalid URL"))
   );
 });
 

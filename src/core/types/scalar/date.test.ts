@@ -1,7 +1,7 @@
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/TaskEither";
 import { dateCodec } from "./date";
-import { mapAll } from "@/config/tests/fixtures";
+import { getErrorMessage, mapAll } from "@/config/tests/fixtures";
 
 it("should validate a date properly", () => {
   const date = new Date().toISOString();
@@ -19,11 +19,6 @@ it("should not validate a date properly", () => {
     date,
     dateCodec.decode,
     TE.fromEither,
-    mapAll((error) => {
-      const errorMessage: string = Array.isArray(error)
-        ? error[0]?.message
-        : "";
-      expect(errorMessage).toBe("Invalid date");
-    })
+    mapAll((error) => expect(getErrorMessage(error)).toBe("Invalid date"))
   );
 });

@@ -1,7 +1,7 @@
 import { pipe } from "fp-ts/function";
 import * as TE from "fp-ts/TaskEither";
 import { emailCodec, isEmail } from "./email";
-import { mapAll } from "@/config/tests/fixtures";
+import { getErrorMessage, mapAll } from "@/config/tests/fixtures";
 
 it("should validate email correctly", () => {
   pipe(
@@ -17,12 +17,7 @@ it("should return error when email is not valid", () => {
     "invalid-email",
     emailCodec.decode,
     TE.fromEither,
-    mapAll((error) => {
-      const errorMessage: string = Array.isArray(error)
-        ? error[0]?.message
-        : "";
-      expect(errorMessage).toBe("Invalid email");
-    })
+    mapAll((error) => expect(getErrorMessage(error)).toBe("Invalid email"))
   );
 });
 
