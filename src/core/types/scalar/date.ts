@@ -11,7 +11,7 @@ export const dateCodec = withMessage(
     (value: string): value is t.Branded<string, DateBrand> => isDate(value),
     "Date"
   ),
-  () => "Invalid date"
+  () => "Invalid date. Please use date.ISOString()"
 );
 
 export type Date = t.TypeOf<typeof dateCodec>;

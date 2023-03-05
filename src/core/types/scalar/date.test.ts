@@ -13,12 +13,16 @@ it("should validate a date properly", async () => {
   )();
 });
 
-it("should not validate a date properly", async () => {
+it("should not accept a string different from date ISOString", async () => {
   const date = "invalid date";
   pipe(
     date,
     dateCodec.decode,
     TE.fromEither,
-    mapAll((error) => expect(getErrorMessage(error)).toBe("Invalid date"))
+    mapAll((error) =>
+      expect(getErrorMessage(error)).toBe(
+        "Invalid date. Please use date.ISOString()"
+      )
+    )
   )();
 });
