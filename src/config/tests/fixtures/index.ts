@@ -3,6 +3,8 @@ import { pipe } from "fp-ts/function";
 import { Email } from "@/core/types/scalar/email";
 import { Password, Slug } from "@/core/types/scalar";
 
+export const unsafeString = (str: any): string => str as string;
+
 export function unsafeEmail(email: string): Email {
   return email as Email;
 }
