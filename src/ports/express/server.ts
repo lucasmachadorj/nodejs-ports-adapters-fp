@@ -2,7 +2,11 @@ import express, { Request, Response } from "express";
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/lib/TaskEither";
 import { register } from "@/adapters/use-cases/user/register-adapter";
-import { userRegister } from "@/adapters/ports/db";
+import { register as registerArticle } from "@/adapters/use-cases/article/register-article-adapter";
+import {
+  userRegister,
+  articleRegister as createArticleDB,
+} from "@/adapters/ports/db";
 
 const app = express();
 
@@ -15,6 +19,15 @@ app.post("/api/users", (req: Request, res: Response) =>
   pipe(
     req.body.user,
     register(userRegister),
+    TE.map((result) => res.json(result)),
+    TE.mapLeft((error) => res.status(422).json(getErrors(error.message)))
+  )()
+);
+
+app.post("/api/articles", (req: Request, res: Response) =>
+  pipe(
+    req.body.article,
+    registerArticle(createArticleDB),
     TE.map((result) => res.json(result)),
     TE.mapLeft((error) => res.status(422).json(getErrors(error.message)))
   )()
